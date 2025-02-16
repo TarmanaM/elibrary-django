@@ -123,8 +123,13 @@ def search_view(request):
 @login_required
 def book_detail(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
+    if request.method == "POST" and "analyze" in request.POST:
+        book.analyze_keywords()
     cover_page = book.pages.first()  # Ambil halaman pertama sebagai cover
     return render(request, 'libraryApp/book_detail.html', {'book': book, 'cover_page': cover_page})
+
+
+
 
 def toggle_favorite(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
