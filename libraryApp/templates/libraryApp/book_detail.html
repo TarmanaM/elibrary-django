@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book.title }} - Detail Buku{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            {% if cover_page %}
+    <img src="{{ cover_page.image.url }}" class="img-fluid" alt="{{ book.title }}">
+{% else %}
+    <img src="" class="img-fluid" alt="Default Cover">
+{% endif %}
+        </div>
+        <div class="col-md-8">
+            <h2>{{ book.title }}</h2>
+            <p class="text-muted">{{ book.author }} - {{ book.year }}</p>
+            <p><strong>Genre:</strong> {{ book.genre }}</p>
+            <p>{{ book.description }}</p>
+            <p><strong>Jumlah Halaman:</strong> {{ book.total_pages }}</p>
+
+            <a href="{% url 'toggle_favorite' book.id %}" class="btn {% if book.is_favorite %}btn-warning{% else %}btn-outline-warning{% endif %}">
+                {% if book.is_favorite %}
+                    ★ Hapus dari Favorit
+                {% else %}
+                    ☆ Tambah ke Favorit
+                {% endif %}
+            </a>
+            <a href="{% url 'book_preview' book.id 1 %}" class="btn btn-info">Preview</a>
+            <a href="{% url 'edit_book' book.id %}" class="btn btn-warning">Edit</a>
+            <form class="my-2" action="{% url 'delete_book' book.id %}" method="post" onsubmit="return confirm('Apakah Anda yakin ingin menghapus buku ini?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Hapus Buku</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

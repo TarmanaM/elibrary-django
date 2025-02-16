@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Katalog - e-Library{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Katalog Buku</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="row">
+        <div class="mb-3">
+            <a href="{% url 'catalog' %}?favorite=all" class="btn {% if filter_favorite == 'all' %}btn-primary{% else %}btn-outline-primary{% endif %}">Semua</a>
+            <a href="{% url 'catalog' %}?favorite=yes" class="btn {% if filter_favorite == 'yes' %}btn-primary{% else %}btn-outline-primary{% endif %}">Favorit</a>
+            
+        </div>
+        
+        {% for book in page_obj %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    {% if book.cover_page %}
+                    <img src="{{ book.cover_page.image.url }}" class="card-img-top" alt="{{ book.title }}">
+                    {% else %}
+                    <img src="" class="card-img-top" alt="Default Cover">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text">{{ book.description|truncatewords:15 }}</p>
+                        <a href="{% url 'book_detail' book.id %}" class="btn btn-primary">Detail</a>
+                        <a href="{% url 'toggle_favorite' book.id %}" class="btn {% if book.is_favorite %}btn-warning{% else %}btn-outline-warning{% endif %}">
+                            {% if book.is_favorite %}
+                                ★ Hapus dari Favorit
+                            {% else %}
+                                ☆ Tambah ke Favorit
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center">Belum ada buku di katalog.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center mt-4">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a>
+                </li>
+            {% endif %}
+            
+            <li class="page-item disabled">
+                <span class="page-link">Halaman {{ page_obj.number }} dari {{ page_obj.paginator.num_pages }}</span>
+            </li>
+            
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

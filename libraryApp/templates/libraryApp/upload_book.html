@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Upload Buku</h2>
+
+    <!-- Notifikasi jika ada pesan -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="mt-3">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="title" class="form-label">Judul</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="author" class="form-label">Penulis</label>
+            <input type="text" class="form-control" id="author" name="author" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Deskripsi</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="genre" class="form-label">Genre</label>
+            <input type="text" class="form-control" id="genre" name="genre" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="published_year" class="form-label">Tahun Terbit</label>
+            <input type="number" class="form-control" id="published_year" name="published_year" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="total_pages" class="form-label">Jumlah Halaman</label>
+            <input type="number" class="form-control" id="total_pages" name="total_pages" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="pdf_file" class="form-label">File PDF</label>
+            <input type="file" class="form-control" id="pdf_file" name="pdf_file" accept="application/pdf" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+</div>
+{% endblock %}
