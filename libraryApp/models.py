@@ -7,6 +7,15 @@ import os
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.db import models
+from sklearn.feature_extraction.text import TfidfVectorizer
+import nltk
+from nltk.corpus import stopwords
+
+
+nltk.download('stopwords')
+STOPWORDS = set(stopwords.words('indonesian'))  
+
 
 
 class Book(models.Model):
@@ -16,12 +25,27 @@ class Book(models.Model):
     genre = models.CharField(max_length=100)
     published_year = models.IntegerField()
     total_pages = models.IntegerField()
-    is_favorite = models.BooleanField(default=False)  # Untuk fitur favorit
+    is_favorite = models.BooleanField(default=False)  
     created_at = models.DateTimeField(auto_now_add=True)
     pdf_file = models.FileField(upload_to='books/pdfs/',default='default.pdf')
+    keywords = models.TextField(blank=True, null=True) 
 
     def __str__(self):
         return self.title
+    
+    def analyze_keywords(self):
+        """Analisis deskripsi buku untuk menemukan kata kunci."""
+        if not self.description:
+            return
+        
+       
+        vectorizer = TfidfVectorizer(stop_words=list(STOPWORDS), max_features=10)
+
+        tfidf_matrix = vectorizer.fit_transform([self.description])
+        feature_names = vectorizer.get_feature_names_out()
+        
+        self.keywords = ", ".join(feature_names)
+        self.save()
     
     def convert_pdf_to_images(self):
         """Mengonversi PDF menjadi gambar dan menyimpannya sebagai BookPage."""
