@@ -3,21 +3,12 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Profil Saya</h2>
-    {% if messages %}
-    {% for message in messages %}
-        <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
+    
 
     <div class="card p-3">
         <div class="mb-3 text-center">
-            {% if profile.photo and profile.photo.url != "/media/profile_pics/default.jpg" %}
-                <img src="{{ profile.photo.url }}" alt="Foto Profil" class="rounded-circle" width="150">
-            {% else %}
-                <i class="fas fa-user-circle" style="font-size: 150px; color: gray;"></i>
-            {% endif %}
+           
+           
         </div>
         <p><strong>Nama:</strong> {{ request.user.username }}</p>
         <p><strong>Email:</strong> {{ request.user.email }}</p>

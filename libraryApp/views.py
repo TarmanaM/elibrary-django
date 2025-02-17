@@ -97,12 +97,13 @@ def catalog(request):
 
 
 
+@login_required
 def user_logout(request):
     logout(request)
     messages.success(request, "Anda telah keluar.")
     return redirect('login')
 
-
+@login_required
 def search_view(request):
     query = request.GET.get('q')
     books = Book.objects.all()
@@ -113,6 +114,9 @@ def search_view(request):
             Q(description__icontains=query) |
             Q(published_year__icontains=query)
         )
+        for book in books:
+            book.cover_page = book.pages.first()  # Ambil halaman pertama
+
 
     paginator = Paginator(books, 5)
     page_number = request.GET.get('page')
@@ -130,7 +134,7 @@ def book_detail(request, book_id):
 
 
 
-
+@login_required
 def toggle_favorite(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     book.is_favorite = not book.is_favorite
@@ -141,7 +145,7 @@ def toggle_favorite(request, book_id):
     else:
         messages.warning(request, f'"{book.title}" dihapus dari Favorit.')
 
-    return redirect('book_detail', book_id=book.id)
+    return redirect('catalog')
 
 @login_required
 def book_preview_view(request, book_id, page_number):
@@ -160,7 +164,7 @@ def book_preview_view(request, book_id, page_number):
         'prev_page': prev_page,
         'next_page': next_page
     })
-
+@login_required
 def upload_book(request):
     if request.method == "POST" and request.FILES.get("pdf_file"):
         title = request.POST["title"]
@@ -188,7 +192,7 @@ def upload_book(request):
         return redirect("catalog")  # Redirect ke halaman daftar buku
 
     return render(request, "libraryApp/upload_book.html")
-
+@login_required
 def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
 
@@ -227,7 +231,7 @@ def edit_book(request, book_id):
         return redirect("catalog")
 
     return render(request, "libraryApp/edit_book.html", {"book": book})
-
+@login_required
 def delete_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     
@@ -240,17 +244,16 @@ def delete_book(request, book_id):
 
 
 
+
+
 @login_required
-def profile_view(request):
+def profile_views(request):
     profile = Profile.objects.get(user=request.user)
     return render(request, 'libraryApp/profile.html', {'profile': profile})
 
-
-from .forms import ProfileForm
-
 @login_required
 def edit_profile(request):
-    profile, created = Profile.objects.get_or_create(user=request.user)
+    profile = Profile.objects.get(user=request.user)
 
     if request.method == "POST":
         name = request.POST.get("name")

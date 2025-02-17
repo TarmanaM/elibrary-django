@@ -6,13 +6,7 @@
 <div class="container mt-4">
     <h2 class="mb-4">Buku Favorit Saya</h2>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
+   
 
     <div class="row">
         {% for book in page_obj %}

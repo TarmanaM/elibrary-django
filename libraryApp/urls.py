@@ -15,7 +15,7 @@ urlpatterns = [
     path('upload/', views.upload_book, name='upload_book'),
     path("book/edit/<int:book_id>/", views.edit_book, name="edit_book"),
     path("book/<int:book_id>/delete/", views.delete_book, name="delete_book"),
-    path('profile/', views.profile_view, name='profile'),
+    path('profile/', views.profile_views, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path("favorites/", views.favorite_books_view, name="favorite_books"),
 
