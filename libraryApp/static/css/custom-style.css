@@ -5,3 +5,41 @@
     object-position: center; 
  
 }
+.navbar {
+    position: relative;
+    z-index: 10;
+}
+body{
+    background-color: whitesmoke;
+}
+.navbar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/static/images/pattern.jpg');
+    background-size: cover;
+    background-repeat: repeat;
+    background-position: center;
+    opacity: 0.3; /* Atur opacity di sini */
+    z-index: -1;
+}
+
+.navbtn-custom {
+    color: black !important; /* Warna teks default */
+    transition: all 0.3s ease;
+    
+}
+
+.navbtn-custom:hover {
+    color: rgb(182, 100, 6) !important; /* Warna teks saat hover */
+    font-weight: 400;
+}
+
+.navbtn-custom.active {
+    color: rgb(43, 29, 3) !important; /* Warna teks saat menu aktif */
+    font-weight: bold;
+    border-bottom: 2px solid orange; /* Garis bawah untuk menandai aktif */
+}

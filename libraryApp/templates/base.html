@@ -7,37 +7,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}e-Library{% endblock %}</title>
+ 
+    <link rel="icon" type="image/png" href="{% static 'images/elibrary-logo.png' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/custom-style.css' %}">
 </head>
 <body>
     
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    
+    
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm" 
+             >
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'home' %}">e-Library</a>
+            <a class=" navbar-brand  fw-bold d-flex align-items-center" href="{% url 'home' %}">
+                <img src="{% static 'images/elibrary-logo.png' %}" alt="Logo" width="100%" height="80" class="me-2">
+                <h1>e-Library</h1>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <a class="navbar-brand" href="{% url 'catalog' %}">Catalog</a>
+                    <a class="navbar-brand navbtn-custom {% if request.path == '/catalog/' %}active{% endif %}"  href="{% url 'catalog' %}">Catalog</a>
                     {% if user.is_authenticated %}
-                        <a class="navbar-brand" href="{% url 'upload_book' %}">Upload</a>
-                        <a class="navbar-brand" href="{% url 'favorite_books' %}">Buku Favorit</a>
-                        <a class="navbar-brand" href="{% url 'profile' %}">Profile</a>
-                        <a class="navbar-brand" href="{% url 'edit_profile' %}">Profile Edit</a>
+                        <a class="navbar-brand navbtn-custom {% if request.path == '/upload/' %}active{% endif %}" href="{% url 'upload_book' %}">Upload</a>
+                        <a class="navbar-brand navbtn-custom {% if request.path == '/favorites/' %}active{% endif %}" href="{% url 'favorite_books' %}">Buku Favorit</a>
+                        <a class="navbar-brand navbtn-custom {% if request.path == '/profile/' %}active{% endif %}" href="{% url 'profile' %}">Profile</a>
+                       
                     {% endif %}
                 </ul>
-            
+    
                 <form class="d-flex ms-auto" method="GET" action="{% url 'search' %}">
                     <input class="form-control me-2" type="search" placeholder="Cari Buku..." name="q" value="{{ query|default:'' }}">
                     <button class="btn btn-outline-light" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
                 </form>
-            
+    
                 {% if user.is_authenticated %}
                     <a href="{% url 'logout' %}" class="btn btn-danger ms-2">Keluar</a>
                 {% else %}
@@ -47,6 +54,7 @@
             </div>
         </div>
     </nav>
+    
     
     {% if messages %}
     
