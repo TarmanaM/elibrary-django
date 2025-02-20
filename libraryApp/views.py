@@ -107,7 +107,7 @@ def user_logout(request):
 def search_view(request):
     query = request.GET.get('q')
     books = Book.objects.all()
-
+    
     if query:
         books = books.filter(
             Q(title__icontains=query) |
@@ -116,7 +116,7 @@ def search_view(request):
         )
         for book in books:
             book.cover_page = book.pages.first()  # Ambil halaman pertama
-
+    
 
     paginator = Paginator(books, 5)
     page_number = request.GET.get('page')
