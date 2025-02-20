@@ -37,14 +37,16 @@ class Book(models.Model):
         """Analisis deskripsi buku untuk menemukan kata kunci."""
         if not self.description:
             return
-        
-       
         vectorizer = TfidfVectorizer(stop_words=list(STOPWORDS), max_features=10)
-
         tfidf_matrix = vectorizer.fit_transform([self.description])
         feature_names = vectorizer.get_feature_names_out()
-        
-        self.keywords = ", ".join(feature_names)
+        scores = tfidf_matrix.toarray().flatten()
+
+        # Urutkan kata berdasarkan skor TF-IDF tertinggi
+        sorted_indices = scores.argsort()[::-1]  # Urutan indeks dari skor tertinggi ke terendah
+        top_keywords = [feature_names[i] for i in sorted_indices if scores[i] > 0]
+
+        self.keywords = ", ".join(top_keywords)
         self.save()
     
     def convert_pdf_to_images(self):
